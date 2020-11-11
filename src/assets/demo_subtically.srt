@@ -1,0 +1,375 @@
+1
+00:00:00,000 --> 00:00:01,899
+Selamat pagi semuanya. 
+
+2
+00:00:01,900 --> 00:00:04,999
+Hari ini kita akan masuk ke
+minggu yang ke-6 ya.
+
+3
+00:00:05,000 --> 00:00:06,889
+Di mana ini adalah minggu
+terakhir untuk teorinya
+
+4
+00:00:06,900 --> 00:00:10,089
+sebelum minggu depan kalian
+sudah harus mempersentasikan
+
+5
+00:00:10,100 --> 00:00:16,489
+go-jek UTS kalian itu ya nanti
+Minggu yang ke-6 ini kita akan
+
+6
+00:00:16,500 --> 00:00:20,989
+mempelajari mengenai brudel
+dalam laravel serta Bagaimana
+
+7
+00:00:21,000 --> 00:00:22,599
+membuat emailnya?
+
+8
+00:00:23,600 --> 00:00:26,688
+Nanti kalian apa namanya
+Explorer berdasarkan kredit
+
+9
+00:00:26,700 --> 00:00:31,888
+yang sudah diberikan lalu
+Kalian membaca materi mengenai
+
+10
+00:00:31,900 --> 00:00:33,199
+materi laravel.
+
+11
+00:00:33,200 --> 00:00:35,399
+Nah ini harus banyak Expose
+bayangkan.
+
+12
+00:00:35,400 --> 00:00:40,189
+Bagaimana membuat website
+menggunakan Framework laravel
+
+13
+00:00:40,200 --> 00:00:45,889
+Oke otentik hari ini tidak
+tidak banyak jadi kita akan
+
+14
+00:00:45,900 --> 00:00:49,489
+mereview sedikit mengenai lara
+itu seperti apa Lalu bagaimana
+
+15
+00:00:49,500 --> 00:00:53,389
+pentingnya bagaimana untuk
+menebak error di dalam laravel
+
+16
+00:00:53,400 --> 00:00:56,389
+Lalu bagaimana untuk
+konfigurasi laravel yang
+
+17
+00:00:56,400 --> 00:01:01,499
+terakhir adalah bagaimana
+menjalankan dengan eloquent?
+
+18
+00:01:02,200 --> 00:01:04,588
+bisa jadi ini adalah yang
+sedikit materi sedikit
+
+19
+00:01:04,599 --> 00:01:08,399
+mengenai laravel group dan
+emailnya
+
+20
+00:01:09,100 --> 00:01:13,088
+kita akan mereview sedikit
+mengenai laravel Nah kalau
+
+21
+00:01:13,100 --> 00:01:15,189
+kalian sudah mempelajari
+materi minggu yang lalu bahwa
+
+22
+00:01:15,200 --> 00:01:19,889
+laravel di sini adalah sebuah
+Framework sebuah Framework
+
+23
+00:01:19,900 --> 00:01:27,088
+yang dirilis oleh lisensi Mit
+enggak dibangun dengan
+
+24
+00:01:27,100 --> 00:01:31,389
+konsepnya adalah mvc atau
+sering dikenal juga dengan
+
+25
+00:01:31,400 --> 00:01:37,889
+kata-kata model kontrol Erna
+disini untuk model itu intinya
+
+26
+00:01:37,900 --> 00:01:38,799
+adalah mewakili
+
+27
+00:01:38,800 --> 00:01:41,889
+struktur data jadi apapun yang
+berhubungan dengan data pasti
+
+28
+00:01:41,900 --> 00:01:50,389
+akan diwakili dengan model
+lalu yang mengatur tampilan ke
+
+29
+00:01:50,400 --> 00:01:54,288
+pengguna yang istilahnya
+beratnya frozen-nya yang
+
+30
+00:01:54,300 --> 00:01:56,199
+bunganya dengan peron
+
+31
+00:01:56,800 --> 00:02:00,788
+ya tinggal websitenya ya bagian
+depannya itu adalah bagiannya
+
+32
+00:02:00,800 --> 00:02:06,088
+view Lalu ada juga yang
+terakhir adalah controller ini
+
+33
+00:02:06,100 --> 00:02:12,089
+adalah yang menjembatani antara
+dengan view jembatannya itu
+
+34
+00:02:12,100 --> 00:02:15,589
+adalah controller lalu untuk
+bagian struktur datangnya itu
+
+35
+00:02:15,600 --> 00:02:19,389
+adalah model data yang
+berhubungan atau yang mengatur
+
+36
+00:02:19,400 --> 00:02:23,389
+tampilan ke pengguna harus
+pahami sini dulu konsepnya
+
+37
+00:02:23,400 --> 00:02:24,499
+gimana
+
+38
+00:02:24,500 --> 00:02:29,189
+kita menggunakan Framework
+laravel jadi di dalam tembok
+
+39
+00:02:29,200 --> 00:02:33,289
+laravel kita menggunakan
+konsep dan namanya Evi see you
+
+40
+00:02:33,300 --> 00:02:36,489
+controlled jadi nanti kalau
+udah punya gambaran oh, nanti
+
+41
+00:02:36,500 --> 00:02:39,089
+ketika nanti berhubungan
+dengan data-data saya akan
+
+42
+00:02:39,100 --> 00:02:42,089
+berhubungan dengan model
+Ketika nanti saya berhubungan
+
+43
+00:02:42,100 --> 00:02:48,189
+dengan view atau tanpa sayap
+hubungannya dengan folder atau
+
+44
+00:02:48,200 --> 00:02:49,799
+bagiannya view
+
+45
+00:02:49,800 --> 00:02:52,489
+tapi ketika Nanti kalian
+membutuhkan keduanya masuknya
+
+46
+00:02:52,500 --> 00:02:55,289
+menjembatani yang menjembatani
+antara model dan view Nanti
+
+47
+00:02:55,300 --> 00:03:00,689
+kalian bisa menggunakan
+Kontrol saya nah kalau yang
+
+48
+00:03:00,700 --> 00:03:03,989
+berikutnya adalah bagaimana
+kita ingin mendebat error
+
+49
+00:03:04,000 --> 00:03:08,389
+enggak pastinya kalian ketika
+teplok sebuah Ya apapun itulah
+
+50
+00:03:08,400 --> 00:03:12,699
+program hot Pasti kalian akan
+menemukan yang namanya error.
+
+51
+00:03:13,900 --> 00:03:14,699
+Tuh ya. 
+
+52
+00:03:14,700 --> 00:03:18,489
+Nah Gimana sih cara kita
+menyelesaikan error tersebut
+
+53
+00:03:18,500 --> 00:03:22,589
+pastinya kalau kita hanya
+melihat error seperti ini saja
+
+54
+00:03:22,600 --> 00:03:24,889
+anaknya dipakainya ketika
+kalian error di dalam laravel
+
+55
+00:03:24,900 --> 00:03:29,389
+ini apa yang error pasti kita
+akan berpikir ini kira-kira
+
+56
+00:03:29,400 --> 00:03:33,089
+apa sih yang error Kok
+tulisanya good looks like
+
+57
+00:03:33,100 --> 00:03:34,499
+something went wrong
+
+58
+00:03:36,600 --> 00:03:39,289
+Hanya tulisannya ada kesalahan
+tapi kita tidak tahu
+
+59
+00:03:39,300 --> 00:03:42,989
+kesalahannya itu apa Nah di
+dalam laravel kita bisa
+
+60
+00:03:43,000 --> 00:03:47,789
+melihat detailnya ketika kita
+ingin menyelesaikan atau
+
+61
+00:03:47,800 --> 00:03:50,999
+memperbaiki error tersebut.
+
+62
+00:03:51,000 --> 00:03:54,089
+Bagaimana kita ingin membuat
+lebih detail errornya seperti
+
+63
+00:03:54,100 --> 00:03:57,089
+apa yang perlu kalian
+perhatikan kalian masuk ke
+
+64
+00:03:57,100 --> 00:04:00,289
+project kalian Project di HP
+kalian lalu bagian konflik
+
+65
+00:04:00,300 --> 00:04:08,389
+faktor konflik lalu pilih app.
+py HP tulisan yang mengandung
+
+66
+00:04:08,400 --> 00:04:10,699
+tulisan seperti ini.
+
+67
+00:04:11,800 --> 00:04:15,389
+Nah coba saja ketemu depan
+kalau di WA saja dari yang
+
+68
+00:04:15,400 --> 00:04:18,489
+default-nya itu adalah Fals
+gali lubang menjadi seperti
+
+69
+00:04:18,500 --> 00:04:20,499
+contoh di bawah ini.
+
+70
+00:04:20,500 --> 00:04:24,999
+Jadi ini adalah default-nya ya
+repotnya.
+
+71
+00:04:25,000 --> 00:04:29,189
+Nah ini yang kalian akan modif
+supaya tujuannya adalah
+
+72
+00:04:29,200 --> 00:04:38,699
+errornya terlihat detil itu
+yang heronya terlihat setel.
+
+73
+00:04:39,700 --> 00:04:42,589
+Nah jadi nanti ketika nanti
+sudah diubah ke truk hasilnya
+
+74
+00:04:42,600 --> 00:04:46,789
+seperti Apa hasilnya seperti
+Nia kecil lebih kecil dan
+
+75
+00:04:46,800 --> 00:04:48,399
+menunjukkan lain-lainnya
+
+76
+00:04:49,600 --> 00:04:52,799
+Daerah di bagian mana nih ada
+orang di baris berapa nih?
+
+77
+00:04:52,800 --> 00:04:56,199
+Nah akan terlihat ini adalah
+tampilan
+
+78
+00:04:58,100 --> 00:04:58,999
+the bell

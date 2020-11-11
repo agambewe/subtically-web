@@ -1,0 +1,73 @@
+Date: Nov 10, 2020
+
+Title: Materi Minggu 6 (online-video-cutter.com)
+
+Speaker 1 - 00:00:00 > 00:00:01
+Selamat pagi semuanya. 
+
+Speaker 1 - 00:00:01 > 00:00:05
+Hari ini kita akan masuk ke minggu yang ke-6 ya. 
+
+Speaker 1 - 00:00:05 > 00:00:22
+Di mana ini adalah minggu terakhir untuk teorinya sebelum minggu depan kalian sudah harus mempersentasikan go-jek UTS kalian itu ya nanti Minggu yang ke-6 ini kita akan mempelajari mengenai brudel dalam laravel serta Bagaimana membuat emailnya? 
+
+Speaker 1 - 00:00:23 > 00:00:33
+Nanti kalian apa namanya Explorer berdasarkan kredit yang sudah diberikan lalu Kalian membaca materi mengenai materi laravel. 
+
+Speaker 1 - 00:00:33 > 00:00:35
+Nah ini harus banyak Expose bayangkan. 
+
+Speaker 1 - 00:00:35 > 00:01:01
+Bagaimana membuat website menggunakan Framework laravel Oke otentik hari ini tidak tidak banyak jadi kita akan mereview sedikit mengenai lara itu seperti apa Lalu bagaimana pentingnya bagaimana untuk menebak error di dalam laravel Lalu bagaimana untuk konfigurasi laravel yang terakhir adalah bagaimana menjalankan dengan eloquent? 
+
+Speaker 1 - 00:01:02 > 00:01:08
+bisa jadi ini adalah yang sedikit materi sedikit mengenai laravel group dan emailnya 
+
+Speaker 1 - 00:01:09 > 00:01:38
+kita akan mereview sedikit mengenai laravel Nah kalau kalian sudah mempelajari materi minggu yang lalu bahwa laravel di sini adalah sebuah Framework sebuah Framework yang dirilis oleh lisensi Mit enggak dibangun dengan konsepnya adalah mvc atau sering dikenal juga dengan kata-kata model kontrol Erna disini untuk model itu intinya adalah mewakili 
+
+Speaker 1 - 00:01:38 > 00:01:56
+struktur data jadi apapun yang berhubungan dengan data pasti akan diwakili dengan model lalu yang mengatur tampilan ke pengguna yang istilahnya beratnya frozen-nya yang bunganya dengan peron 
+
+Speaker 1 - 00:01:56 > 00:02:24
+ya tinggal websitenya ya bagian depannya itu adalah bagiannya view Lalu ada juga yang terakhir adalah controller ini adalah yang menjembatani antara dengan view jembatannya itu adalah controller lalu untuk bagian struktur datangnya itu adalah model data yang berhubungan atau yang mengatur tampilan ke pengguna harus pahami sini dulu konsepnya gimana 
+
+Speaker 1 - 00:02:24 > 00:02:49
+kita menggunakan Framework laravel jadi di dalam tembok laravel kita menggunakan konsep dan namanya Evi see you controlled jadi nanti kalau udah punya gambaran oh, nanti ketika nanti berhubungan dengan data-data saya akan berhubungan dengan model Ketika nanti saya berhubungan dengan view atau tanpa sayap hubungannya dengan folder atau bagiannya view 
+
+Speaker 1 - 00:02:49 > 00:03:12
+tapi ketika Nanti kalian membutuhkan keduanya masuknya menjembatani yang menjembatani antara model dan view Nanti kalian bisa menggunakan Kontrol saya nah kalau yang berikutnya adalah bagaimana kita ingin mendebat error enggak pastinya kalian ketika teplok sebuah Ya apapun itulah program hot Pasti kalian akan menemukan yang namanya error. 
+
+Speaker 1 - 00:03:13 > 00:03:14
+Tuh ya. 
+
+Speaker 1 - 00:03:14 > 00:03:34
+Nah Gimana sih cara kita menyelesaikan error tersebut pastinya kalau kita hanya melihat error seperti ini saja anaknya dipakainya ketika kalian error di dalam laravel ini apa yang error pasti kita akan berpikir ini kira-kira apa sih yang error Kok tulisanya good looks like something went wrong 
+
+Speaker 1 - 00:03:36 > 00:03:51
+Hanya tulisannya ada kesalahan tapi kita tidak tahu kesalahannya itu apa Nah di dalam laravel kita bisa melihat detailnya ketika kita ingin menyelesaikan atau memperbaiki error tersebut. 
+
+Speaker 1 - 00:03:51 > 00:04:10
+Bagaimana kita ingin membuat lebih detail errornya seperti apa yang perlu kalian perhatikan kalian masuk ke project kalian Project di HP kalian lalu bagian konflik faktor konflik lalu pilih app.py HP tulisan yang mengandung tulisan seperti ini. 
+
+Speaker 1 - 00:04:11 > 00:04:20
+Nah coba saja ketemu depan kalau di WA saja dari yang default-nya itu adalah Fals gali lubang menjadi seperti contoh di bawah ini. 
+
+Speaker 1 - 00:04:20 > 00:04:25
+Jadi ini adalah default-nya ya repotnya. 
+
+Speaker 1 - 00:04:25 > 00:04:38
+Nah ini yang kalian akan modif supaya tujuannya adalah errornya terlihat detil itu yang heronya terlihat setel. 
+
+Speaker 1 - 00:04:39 > 00:04:48
+Nah jadi nanti ketika nanti sudah diubah ke truk hasilnya seperti Apa hasilnya seperti Nia kecil lebih kecil dan menunjukkan lain-lainnya 
+
+Speaker 1 - 00:04:49 > 00:04:52
+Daerah di bagian mana nih ada orang di baris berapa nih? 
+
+Speaker 1 - 00:04:52 > 00:04:56
+Nah akan terlihat ini adalah tampilan 
+
+Speaker 1 - 00:04:58 > 00:04:59
+the bell 
+
