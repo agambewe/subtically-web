@@ -16,46 +16,70 @@
             <v-card max-width="1000">
                 <v-card-text>
                     <v-container>
-                        <vue-plyr>
-                            <video
-                                controls
-                                crossorigin
-                                playsinline
-                            >
-                                <source
-                                size="720"
-                                src="../../assets/demo_subtically.mp4"
-                                type="video/mp4"
-                                />
+                        <!-- <vue-plyr :options="options">
+                    <video
+                        controls
+                        crossorigin
+                        playsinline
+                        data-poster="http://127.0.0.1:8000/uploads/images/april.jpg"
+                    >
+                        <source
+                            size="720"
+                            src="http://127.0.0.1:8000/uploads/videos/april.mp4"
+                            type="video/mp4"
+                        />
+                        <track
+                            default
+                            kind="captions"
+                            label="Indonesian captions"
+                            src="http://127.0.0.1:8000/uploads/videos/april.vtt"
+                            srclang="id"
+                        />
+                        <a
+                            download=""
+                            href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
+                        >
+                            Download
+                        </a>
+                    </video>
+                </vue-plyr> -->
+                        <vue-plyr v-if="detail.urlvid" ref="plyr" style="width: 100%; height: 100%">
+                            <video playsinline :crossorigin="true" :src="detail.urlvid" type="video/mp4">
                                 <track
                                 kind="captions"
                                 label="Indonesian captions"
-                                src="../../assets/demo_subtically.vtt"
+                                :src="subUrl.src"
                                 srclang="id"
-                                default= true,
+                                default= true
                                 />
                             </video>
                         </vue-plyr>
                         <v-row no-gutters>
-                        <v-col>
-                            <v-col class="pa-1" tile >
+                            <v-col>
+                                <v-col class="pa-1" tile >
+                                </v-col>
                             </v-col>
-                        </v-col>
-                        <v-col md="auto">
-                            <v-col class="pa-2" >
-                                <v-select
-                                :items="subUrl"
-                                label="Download Sub"
-                                dense
-                                outlined
-                                ></v-select>
+                            <!-- <v-col md="auto">
+                                <v-col class="pa-2" >
+                                    <v-select
+                                    :items="subUrl"
+                                    v-model="select"
+                                    single-line
+                                    item-text="report"
+                                    item-value="ext"
+                                    v-on:change="changeExt"
+                                    label="Download Sub"
+                                    dense
+                                    outlined
+                                    ></v-select>
+                                </v-col>
+                            </v-col> -->
+                            <v-col lg="2">
+                                <v-col class="pa-2">
+                                    <!-- <v-btn @click="downloadFile(select.ext)">Download Vid</v-btn> -->
+                                    <v-btn @click="downloadFile()">Download Vid</v-btn>
+                                </v-col>
                             </v-col>
-                        </v-col>
-                        <v-col lg="2">
-                            <v-col class="pa-2">
-                                <a href="../../assets/demo_subtically.mp4"> <v-btn>Download Vid</v-btn> </a>
-                            </v-col>
-                        </v-col>
                         </v-row>
                         <v-card-title primary-title>
                                 <v-col>
@@ -73,7 +97,7 @@
     </v-container>
 </template>
 
-<style>
+<style scoped>
     @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono");
 
     table th + th { border-left:1px solid #dddddd; }
@@ -111,65 +135,49 @@
             return {
                 load: false,
                 dialog: false,
-                dialogDetail: false,
-                typeInput: 'Tambah',
                 role: '',
-                keyword: '',
-                headers: [
-                    {
-                        text: 'Title',
-                        value: 'title'
-                    },
-                    {
-                        text: 'Created at',
-                        value: 'created_at'
-                    },
-                    {
-                        text: 'Action',
-                        value: null,
-                        sortable: false,
-                        align: 'center',
-                        width: 150
-                    },
-                ],
-                video: [
-                ],
-                jenisHewan: [],
-                customer: [],
                 detail: {
                     name: '',
-                    diubah: '',
-                    diubaholeh: '',
+                    title: '',
+                    date_only: '',
                     dibuat: '',
-                    dibuatoleh: '',
+                    description: '',
+                    urlvid: '',
+                    urlsub: '',
+                    subname: '',
                 },
                 updatedId: '',
                 errors: '',
-                user: new FormData,
                 menu2: false,
-                options: 'debug',
-                videoUrl: '',
-                subUrl: ['demo_subtically.vtt','demo_subtically.srt','demo_subtically.txt'],
+                // options: 'debug',
+                options: { quality: { default: '720p' } },
+                videoUrl: { src: '', format: 'mp4' 
+                },
+                // select: { report: 'subtitle.srt', ext: 'srt' },
+                subUrl: {
+                    label: "Subtitle",
+                    src: "",
+                    srclang: "id"
+                },
             }
         },
         computed: {
-            formTitle() {
-                return this.typeInput
-            },
         },
         methods: {
-            close() {
-                this.dialog = false
-                this.typeInput = 'Tambah';
-            },
-            clear() {
-                this.resetForm();
-            },
             readData() {
                 var uri = this.$apiUrl + '/videos/'+this.$route.params.id
-                this.$http.get(uri).then(response => {
+                this.$http.get(uri, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }).then(response => {
                     var item = response.data[0]
                     this.dialogDetail = true
+                    this.detail.subname = item.subname;
+                    this.detail.urlvid = this.$baseUrl+item.video
+                    this.videoUrl.src = this.$baseUrl+item.video
+                    this.detail.urlsub = this.$baseUrl+"/uploads/subtitles/"+item.subname
+                    this.subUrl.src = this.$baseUrl+"/uploads/subtitles/"+item.subname+".vtt"
                     this.detail.title = item.title
                     this.detail.name = item.detail_user.name
                     this.detail.date_only = item.date_only
@@ -179,18 +187,69 @@
             setRole() {
                 this.role = localStorage.getItem('role');
             },
-            getVideo(){
-                this.videoUrl = "../../assets/demo_subtically.mp4"
+            downloadFile(){
+                this.downloadSub();
+                // this.downloadSub(ext);
+                this.downloadVid();
             },
-            getSubtitle(ext){
-                var wow = ".srt"+ext
-                this.subUrl = this.$apiUrl+"/../uploads/demo_subtically"+wow;
-            }
+            downloadSub(){
+                    this.$http({
+                            // url: this.detail.urlsub+"."+ext,
+                            url: this.detail.urlsub+".srt",
+                            method: 'GET',
+                            responseType: 'blob',
+                        }).then((response) => {
+                            var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                            var fileLink = document.createElement('a');
+
+                            fileLink.href = fileURL;
+                            // var fileName = this.detail.subname+"."+ext;
+                            var fileName = this.detail.subname+".srt";
+                            fileLink.setAttribute('download', fileName);
+                            document.body.appendChild(fileLink);
+
+                            fileLink.click();
+                        });
+            },
+            downloadVid(){
+                    this.$http({
+                            url: this.detail.urlvid,
+                            method: 'GET',
+                            responseType: 'blob',
+                        }).then((response) => {
+                            var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                            var fileLink = document.createElement('a');
+
+                            fileLink.href = fileURL;
+                            var fileName = this.detail.subname+ '.mp4';
+                            fileLink.setAttribute('download', fileName);
+                            document.body.appendChild(fileLink);
+
+                            fileLink.click();
+                        });
+            },
+            // getVideo(){
+            //     this.videoUrl = this.$apiUrl+"/../uploads/demo_subtically.mp4";
+            // },
+            // changeExt(ext){
+            //     var wow = ".srt"+ext
+            //     this.subExt = this.$apiUrl+"/../uploads/demo_subtically"+wow;
+            // },
+            // getSubtitle(){
+            //     var uri = this.$apiUrl +"/../uploads/demo_subtically.vtt"
+            //     this.$http.get(uri, {
+            //             headers: {
+            //                 'Authorization': 'Bearer ' + localStorage.getItem('token')
+            //             }
+            //         }).then(
+            //         this.subUrl = uri
+            //     )
+            // }
         },
         mounted() {
             this.setRole();
             this.readData();
-            this.getVideo();
+            // this.getVideo();
         },
     }
 </script>

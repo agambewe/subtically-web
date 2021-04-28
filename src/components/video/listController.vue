@@ -21,37 +21,37 @@
 
             <template v-slot:default="props">
                 <v-row>
-                    <v-col v-for="item in props.items" :key="item.title" cols="12" sm="12">
+                    <v-col v-for="item in props.items" :key="item.id" cols="12" sm="12">
                         <!-- <v-card> -->
-                        <v-card color="white" class="cardView black--text">
-                            <v-layout row wrap>
-                                <v-flex xs3>
-                                    <v-img
-                                        src="https://cdn.suwalls.com/wallpapers/nature/rocky-mountains-covered-in-snow-36040-1920x1200.jpg"
-                                        height="225px"
-                                        contain
-                                    ></v-img>
-                                </v-flex>
-                                <v-flex xs9>
-                                    <v-card-title primary-title>
-                                            {{ item.title }}
-                                        <v-card-text>
-                                            <span class="grey--text">@{{item.detail_user.name}} - {{item.date_only}}</span>
-                                            <div>{{ item.description }}</div>
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn text color="blue lighten-2">
-                                                <router-link class="readMore" :to="{ name: 'viewController', params: { id: item.id } }">
-                                                    <span>Read More</span>
-                                                </router-link>
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </v-card-title>
-                                </v-flex>
-                            </v-layout>
-                            <v-divider light></v-divider>
-                        </v-card>
+                        <router-link class="readMore" :to="{ name: 'viewController', params: { id: item.id } }">
+                            <v-card color="white" class="cardView black--text">
+                                <v-layout row wrap>
+                                    <v-flex xs3>
+                                        <v-img
+                                            :src="$apiUrl+'/../uploads/images/'+item.thumbnail"
+                                            height="225px"
+                                            contain
+                                        ></v-img>
+                                    </v-flex>
+                                    <v-flex xs9>
+                                        <v-card-title primary-title>
+                                                {{ item.title }}
+                                            <v-card-text>
+                                                <span class="grey--text">@{{item.detail_user.name}} - {{item.date_only}}</span>
+                                                <div>{{ item.description }}</div>
+                                            </v-card-text>
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn text color="blue lighten-2">
+                                                        <span>Read More</span>
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card-title>
+                                    </v-flex>
+                                </v-layout>
+                                <v-divider light></v-divider>
+                            </v-card>
+                        </router-link>
                     </v-col>
                 </v-row>
             </template>
@@ -73,7 +73,7 @@
 </v-container>
 </template>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono");
 
 table th+th {
@@ -126,10 +126,10 @@ export default {
             load: false,
             videos: [],
             filter: {},
-            sortDesc: false,
+            sortDesc: true,
             page: 1,
             itemsPerPage: 3,
-            sortBy: 'title',
+            sortBy: 'created_at',
             checkDelete: [],
             search: "",
             editedIndex: -1,
@@ -155,9 +155,13 @@ export default {
         },
         readData() {
             var uri = this.$apiUrl + '/videos'
-            this.$http.get(uri).then(response => {
+            this.$http.get(uri, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }).then(response => {
                 this.videos = response.data
-                this.typeHeader='Daftar Produk Tersedia'
+                // this.typeHeader='Daftar Produk Tersedia'
             })
         },
     },

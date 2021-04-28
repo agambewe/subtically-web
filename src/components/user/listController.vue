@@ -12,11 +12,11 @@
                         </v-flex>
                         <v-divider class="mx-1" inset vertical></v-divider>
                         <v-flex xs4 >
-                            <v-text-field v-model="keyword" append-icon="mdi-magnify" label="Cari" single-line hide-details></v-text-field>
+                            <v-text-field v-model="keyword" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
                         </v-flex>
                     </template>
                 </v-dialog>
-                <v-dialog v-model="dialogDetail" max-width="1024px">
+                <v-dialog v-model="dialogDetail" max-width="524px">
                     <v-card>
                         <v-card-title>
                             <span class="headline text-md-center">Detail Data {{ this.detail.username }}</span>
@@ -45,9 +45,9 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.username }}</td>
                             <td>{{ item.email }}</td>
-                            <td v-if="role=='1'"> Admin </td>
-                            <td v-if="role=='2'"> Dosen </td>
-                            <td v-if="role=='3'"> Siswa </td>
+                            <td v-if="item.role=='1'"> Admin </td>
+                            <td v-if="item.role=='2'"> Pengajar </td>
+                            <td v-if="item.role=='3'"> Siswa </td>
                             <td >
                                 <div class="text-center">
                                     <v-btn icon color="blue lighten-2" @click="readDetail(item)">
@@ -58,7 +58,7 @@
                                             <v-icon>mdi-pencil</v-icon>
                                         </router-link>
                                     </v-btn>
-                                    <v-btn v-if="role!='OWNER'" icon color="red accent-2" @click="setDeletedBy(item.id)">
+                                    <v-btn v-if="role!='OWNER'" icon color="red accent-2" @click="deleteData(item.id)">
                                         <v-icon>mdi-delete-empty</v-icon>
                                     </v-btn>
                                 </div>
@@ -66,7 +66,7 @@
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <td :colspan="headers.length" class="text-center">Data tidak ditemukan/ masih kosong.</td>
+                        <td :colspan="headers.length" class="text-center">Empty Data</td>
                     </tbody>
                 </template>
             </v-data-table>
@@ -74,7 +74,7 @@
     </v-container>
 </template>
 
-<style>
+<style scoped>
     @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono");
 
     table th + th { border-left:1px solid #dddddd; }
@@ -135,6 +135,10 @@
                         value: 'email'
                     },
                     {
+                        text: 'Role',
+                        value: 'role'
+                    },
+                    {
                         text: 'Action',
                         value: null,
                         sortable: false,
@@ -187,21 +191,24 @@
             },
             readData() {
                 var uri = this.$apiUrl + '/users'
-                this.$http.get(uri).then(response => {
+                this.$http.get(uri, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }).then(response => {
                     this.users = response.data
                 })
             },
             deleteData(deleteId) {
-
-                var uri = this.$apiUrl + '/hewan/by/' + deleteId;
+                var uri = this.$apiUrl + '/users/' + deleteId;
                 this.$swal({
-                    title: 'Apa anda yakin??',
-                    text: 'Setelah dihapus, Anda tidak akan dapat memulihkan data ini!',
+                    title: 'Warning!',
+                    text: 'Are you sure?',
                     icon: 'warning',
                     cancelButtonColor: '#FF5252',
                     confirmButtonColor: '#BDBDBD',
-                    cancelButtonText: 'Oke!',
-                    confirmButtonText: 'Batal',
+                    cancelButtonText: 'Yes!',
+                    confirmButtonText: 'No',
                     showCancelButton: true,
                     allowEscapeKey: false,
                     // reverseButtons: true,
@@ -210,22 +217,29 @@
                 }).then((result) => {
                     if (!result.value) {
                         this.load = true
-                        this.$http.post(uri, this.user).then(response => {
-                            this.$swal({
-                            title: response.data.message,
-                            icon: 'success',
-                            timer: 1500})
-                            this.load = false;
-                            this.close();
-                            this.readData(); //refresh data ini 
-                            this.resetForm();
-                }).catch(error => {
-                        this.errors = error
+                        this.$http.delete(uri, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }).then(response => {
                         this.$swal({
-                            title: 'Gagal menghapus data!',
-                            text: 'Coba lagi ..',
-                            icon: 'error',
-                            });
+                            icon: 'success',
+                            title: response.data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.readData();
+                        this.load = false;
+                        }).catch(error => {
+                            this.errors = error
+                            this.$swal({
+                                icon: 'error',
+                                title: 'Warning !',
+                                text: this.errors,
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
                         })
                     }
                 })
@@ -243,7 +257,7 @@
         },
         mounted() {
             this.readData();
-            this.setRole();
+            // this.setRole();
         },
     }
 </script>

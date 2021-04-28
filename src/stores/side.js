@@ -29,19 +29,41 @@ export default {
                 ],
             },
         ],
-        dosen: [
-            {
-            },
+        pengajar: [
+            { 
+                title: 'Video',
+                icon: 'mdi-view-dashboard', 
+                active: true,
+                items: [
+                    { 
+                        title: 'Video List', 
+                        path: '/videos',
+                    }, 
+                    { 
+                        title: 'My Video', 
+                        path: '/my-videos',
+                    },
+                ]
+            },  
         ],
         siswa: [
-            {
-            },
+            { 
+                title: 'Video',
+                icon: 'mdi-view-dashboard', 
+                active: true,
+                items: [
+                    { 
+                        title: 'Video List', 
+                        path: '/videos',
+                    },
+                ]
+            },  
         ],
     },
 
     getters: {
         getAdmin: state => state.admin,
-        getDosen: state => state.dosen,
+        getPengajar: state => state.pengajar,
         getSiswa: state => state.siswa,
     },
 };

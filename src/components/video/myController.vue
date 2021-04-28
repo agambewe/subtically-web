@@ -9,17 +9,17 @@
                             <v-btn small class="mx-2" color="primary" v-on="on" router to="/videos/store">
                                 New Video
                             </v-btn>
-                            <v-btn small class="mx-2" color="primary darken-2" v-on="on" router to="/videos/live">
+                            <!-- <v-btn small class="mx-2" color="primary darken-2" v-on="on" router to="/videos/live">
                                 Live Now
-                            </v-btn>
+                            </v-btn> -->
                         </v-flex>
                         <v-divider class="mx-1" inset vertical></v-divider>
                         <v-flex xs4 >
-                            <v-text-field v-model="keyword" append-icon="mdi-magnify" label="Cari" single-line hide-details></v-text-field>
+                            <v-text-field v-model="keyword" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
                         </v-flex>
                     </template>
                 </v-dialog>
-                <v-dialog v-model="dialogDetail" max-width="1024px">
+                <v-dialog v-model="dialogDetail" max-width="1024px" >
                     <v-card>
                         <v-card-title>
                             <span class="headline text-md-center">Detail Data {{ this.detail.title }}</span>
@@ -29,7 +29,7 @@
                             <v-layout row>
                                 <v-flex xs3>
                                     <v-img
-                                        src="https://cdn.suwalls.com/wallpapers/nature/rocky-mountains-covered-in-snow-36040-1920x1200.jpg"
+                                        :src="$apiUrl+'/../uploads/images/'+detail.thumbnail"
                                         height="225px"
                                         contain
                                     ></v-img>
@@ -52,7 +52,7 @@
                     </v-card>
                 </v-dialog>
             </v-layout>
-            <v-data-table :headers="headers" :items-per-page="5" :items="video" :sort-by="'updated_at'" :sort-desc="true" :search="keyword" :loading="load" no-data-text="Data kosong" light>
+            <v-data-table :headers="headers" :items-per-page="5" :items="video" :sort-by="'updated_at'" :sort-desc="true" :search="keyword" :loading="load" no-data-text="Empty Data" light>
                 <template v-slot:body="{ items }">
                     <tbody v-if="items.length!=0">
                         <tr v-for="item in items" :key="item.id">
@@ -64,12 +64,12 @@
                                     <v-btn icon color="blue lighten-2" @click="readDetail(item)">
                                         <v-icon>mdi-arrow-down</v-icon>
                                     </v-btn>    
-                                    <v-btn v-if="role!='OWNER'" icon color="amber accent-3">
+                                    <v-btn icon color="amber accent-3">
                                         <router-link class="routerLink" :to="{ name: 'updateVideo', params: { id: item.id } }">
                                             <v-icon>mdi-pencil</v-icon>
                                         </router-link>
                                     </v-btn>
-                                    <v-btn v-if="role!='OWNER'" icon color="red accent-2" @click="setDeletedBy(item.id)">
+                                    <v-btn icon color="red accent-2" @click="deleteData(item.id)">
                                         <v-icon>mdi-delete-empty</v-icon>
                                     </v-btn>
                                 </div>
@@ -77,7 +77,7 @@
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <td :colspan="headers.length" class="text-center">Data tidak ditemukan/ masih kosong.</td>
+                        <td :colspan="headers.length" class="text-center">Empty Data</td>
                     </tbody>
                 </template>
             </v-data-table>
@@ -85,7 +85,7 @@
     </v-container>
 </template>
 
-<style>
+<style scoped>
     @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono");
 
     table th + th { border-left:1px solid #dddddd; }
@@ -189,29 +189,45 @@
                 this.resetForm();
             },
             readDetail(item) {
-                this.dialogDetail = true
-                this.detail.title = item.title
-                this.detail.name = item.detail_user.name
-                this.detail.date_only = item.date_only
-                this.detail.description = item.description
+                this.$swal({
+                    title: item.title,
+                    // text: item.description,
+                    html:'<font style="font-size:12px" class="grey--text">@'+ item.detail_user.name+' - '
+                        +item.date_only+'</font><br><p>'+item.description+'</p>',
+                    imageUrl: this.$apiUrl+'/../uploads/images/'+item.thumbnail,
+                    imageWidth: 400,
+                    imageHeight: 200,
+                    imageAlt: item.thumbnail.split('.')[0],
+                    confirmButtonColor: '#9DB7B0',
+                    animation: false
+                })
+                // this.dialogDetail = true
+                // this.detail.title = item.title
+                // this.detail.name = item.detail_user.name
+                // this.detail.thumbnail = item.thumbnail
+                // this.detail.date_only = item.date_only
+                // this.detail.description = item.description
             },
             readData() {
                 var uri = this.$apiUrl + '/videos-by-user/'+this.user_id
-                this.$http.get(uri).then(response => {
+                this.$http.get(uri, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }).then(response => {
                     this.video = response.data
                 })
             },
             deleteData(deleteId) {
-
-                var uri = this.$apiUrl + '/hewan/by/' + deleteId;
+                var uri = this.$apiUrl + '/videos/' + deleteId;
                 this.$swal({
-                    title: 'Apa anda yakin??',
-                    text: 'Setelah dihapus, Anda tidak akan dapat memulihkan data ini!',
+                    title: 'Warning!',
+                    text: 'Are you sure?',
                     icon: 'warning',
                     cancelButtonColor: '#FF5252',
                     confirmButtonColor: '#BDBDBD',
-                    cancelButtonText: 'Oke!',
-                    confirmButtonText: 'Batal',
+                    cancelButtonText: 'Yes!',
+                    confirmButtonText: 'No',
                     showCancelButton: true,
                     allowEscapeKey: false,
                     // reverseButtons: true,
@@ -220,22 +236,29 @@
                 }).then((result) => {
                     if (!result.value) {
                         this.load = true
-                        this.$http.post(uri, this.user).then(response => {
-                            this.$swal({
-                            title: response.data.message,
-                            icon: 'success',
-                            timer: 1500})
-                            this.load = false;
-                            this.close();
-                            this.readData(); //refresh data ini 
-                            this.resetForm();
-                }).catch(error => {
-                        this.errors = error
+                        this.$http.delete(uri, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }).then(response => {
                         this.$swal({
-                            title: 'Gagal menghapus data!',
-                            text: 'Coba lagi ..',
-                            icon: 'error',
-                            });
+                            icon: 'success',
+                            title: response.data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.readData();
+                        this.load = false;
+                        }).catch(error => {
+                            this.errors = error
+                            this.$swal({
+                                icon: 'error',
+                                title: 'Warning !',
+                                text: this.errors,
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.load = false;
                         })
                     }
                 })

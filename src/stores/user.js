@@ -14,7 +14,7 @@ export default {
 
     getters: {
         getAdmin: state => state.admin,
-        getDosen: state => state.dosen,
+        getPengajar: state => state.pengajar,
         getSiswa: state => state.siswa,
     },
     mutations: {

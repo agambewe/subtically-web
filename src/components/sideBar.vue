@@ -32,8 +32,7 @@
                 
                     <v-list-item 
                         v-for="item in sub.items"
-                        :key="item.title" link 
-                        @click="item.path"
+                        :key="item.title" link
                     >
                         <v-list-item-content> 
                             <router-link :to="item.path" tag="ul" exact>
@@ -53,10 +52,10 @@
                     <v-container>
                         <tbody>
                             <ul>
-                                <ul># <strong>Nama : </strong>{{ this.userData.name }}</ul>
+                                <ul># <strong>Name : </strong>{{ this.userData.name }}</ul>
                                 <ul># <strong>Username : </strong>{{ this.userData.username }}</ul>
-                                <ul># <strong>Email : </strong>{{ this.userData.alamat }}</ul>
-                                <ul># <strong>Role : </strong>{{ this.userData.tanggal_lahir }}</ul>
+                                <ul># <strong>Email : </strong>{{ this.userData.email }}</ul>
+                                <ul># <strong>Role : </strong>{{ this.userData.role }}</ul>
                             </ul>
                         </tbody>
                     </v-container>
@@ -69,7 +68,7 @@
         <v-app-bar app fixed height="75px" color="#F5F5F5"> 
             <!-- :src="bg" -->
             <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> 
-            <v-toolbar-title style="font-family: 'Jolly Lodger';font-size: 45px;" > Subtically </v-toolbar-title>
+            <v-toolbar-title><img src="/assets/title.png" height="30" width="100"/></v-toolbar-title>
             <VSpacer /> 
             <v-toolbar-items>
                 <v-btn text router @click="dialog = true"><v-icon>mdi-face</v-icon></v-btn>
@@ -102,7 +101,12 @@ export default {
             username: '',
             role: '',
             items: [],
-            userData: [],
+            userData: {
+                name: '',
+                email: '',
+                username: '',
+                role: '',
+            },
             allNotifications: [],
             unreadNotifications: [],
         } 
@@ -113,6 +117,7 @@ export default {
         this.setUsername();
         this.setRole();
         this.cekRole();
+        this.readUser();
 
     },
     methods: {
@@ -126,19 +131,36 @@ export default {
             var role = this.role;
             if(role == 'ADMIN'){
                 this.items = this.admin;
-            }else if(role == 'DOSEN'){
-                this.items = this.dosen;
+                this.userData.role = 'admin';
+            }else if(role == 'PENGAJAR'){
+                this.items = this.pengajar;
+                this.userData.role = 'pengajar';
             }else if(role == 'SISWA'){
                 this.items = this.siswa;
+                this.userData.role = 'siswa';
             }
+        },
+        readUser() {
+            var uri = this.$apiUrl + '/users/'+ this.username
+            this.$http.get(uri, {
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            }
+                        }).then(response => {
+                var item = response.data
+                this.userData.name = item.name
+                this.userData.username = item.username
+                this.userData.email = item.email
+            })
         },
         submitLogout() {
             localStorage.removeItem('user_id');
             localStorage.removeItem('role');
+            localStorage.removeItem('token');
             this.username = '';
             this.role = '';
             this.$router.push({
-                    name: 'login'
+                    name: 'landing'
                 })
         },
         initUser(){
@@ -151,7 +173,7 @@ export default {
     computed: {
     ...mapGetters({
         admin: "side/getAdmin",
-        dosen : "side/getDosen",
+        pengajar : "side/getPengajar",
         siswa : "side/getSiswa"
     }),
 },

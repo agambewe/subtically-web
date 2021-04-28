@@ -1,4 +1,11 @@
 module.exports = {
+  devServer: { proxy: 'http://127.0.0.1:8000/api/'},
+  // headers: {
+  //   'Access-Control-Allow-Origin': '*',
+  //   'Cache-Control': null,
+  //   'X-Requested-With': null,
+  //   'Content-Type': 'text/html'
+  //   },
   "transpileDependencies": [
     "vuetify"
   ],

@@ -1,5 +1,6 @@
 <template>
     <v-container dark>
+        <vue-progress-bar></vue-progress-bar>
         <v-container grid-list-md mb-0>
             <h1 class="text-md-center" style="font-family: 'Share Tech Mono';text-shadow: -2px 4px 4px silver">Add Video</h1>
             <v-layout row wrap style="margin:10px">
@@ -10,176 +11,178 @@
                                 Back
                             </v-btn>
                         </v-flex>
-                        <v-divider class="mx-1" inset vertical></v-divider>
-                        <v-flex xs4 >
-                            <v-text-field v-model="keyword" append-icon="mdi-magnify" label="Cari" single-line hide-details></v-text-field>
-                        </v-flex>
                     </template>
                     
                 </v-dialog>
             </v-layout>
             <v-card>
-                <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-row>
-                            <v-col cols="12" sm="6" md="6">
-                                <v-text-field v-model="form.name" label="Name"></v-text-field>
-                            </v-col>
-                            <v-col cols="12" sm="12" md="12">
-                                    <v-textarea
-                                    clearable
-                                    counter
-                                    label="Description"
-                                    :rules="rules"
-                                    :value="value"
-                                    ></v-textarea>
-                            </v-col>
-                            <v-col cols="6" sm="6" md="6">
-                                <v-file-input
-                                    accept="video/*"
-                                    label="File input"
-                                ></v-file-input>
-                            </v-col>
+                        <ValidationObserver ref="observer" v-slot="{  }">
+                            <v-form>
+                                <v-row>
+                                    <v-col cols="12" sm="6" md="6">
+                                        <ValidationProvider v-slot="{ errors }" name='Title' rules="required">
+                                            <v-text-field 
+                                                v-model="form.title" 
+                                                label="Title" 
+                                                :error-messages="errors"
+                                            />
+                                        </ValidationProvider>
+                                    </v-col>
+                                    <v-col cols="12" sm="12" md="12">
+                                            <ValidationProvider v-slot="{ errors }" name="Description" rules="required">
+                                                <v-textarea
+                                                v-model="form.description"
+                                                :error-messages="errors"
+                                                clearable
+                                                counter
+                                                label="Description"
+                                                required
+                                                ></v-textarea>
+                                            </ValidationProvider>
+                                    </v-col>
+                                    <v-col cols="6" sm="6" md="6">
+                                        <ValidationProvider v-slot="{ errors }" name="Video" rules="required">  
+                                            <v-file-input
+                                                v-model="form.video"
+                                                :error-messages="errors"
+                                                accept="video/*"
+                                                label="File input"
+                                                required
+                                            ></v-file-input>
+                                        </ValidationProvider>
+                                    </v-col>
 
-                            <v-col cols="6" sm="6" md="6">
-                                <v-autocomplete
-                                    v-model="form.id_jenis"
-                                    :items="jenisHewan"
-                                    item-value="id"
-                                    item-text="name"
-                                    label="Language"
-                                    required
-                                    hide-selected
-                                    clearable>
-                                </v-autocomplete>
-                            </v-col>
-                        </v-row>
+                                    <v-col cols="6" sm="6" md="6">
+                                        <ValidationProvider v-slot="{ errors }" name="Language" rules="required">
+                                            <v-autocomplete
+                                                v-model="form.language"
+                                                :items="languageList"
+                                                :error-messages="errors"
+                                                item-value="code"
+                                                item-text="name"
+                                                label="Language"
+                                                hint="Select the language that you use in the video"
+                                                persistent-hint
+                                                required
+                                                hide-selected
+                                                clearable>
+                                            </v-autocomplete>
+                                        </ValidationProvider>
+                                    </v-col>
+                                </v-row>
+                            </v-form>
+                        </ValidationObserver>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red accent-2" text @click="close">Reset</v-btn>
-                    <v-btn color="primary" text @click="setForm()">Submit</v-btn>
+                    <v-btn color="red accent-2" text @click="clear">Reset</v-btn>
+                    <v-btn color="primary" text @click="checkForm()">Submit</v-btn>
                 </v-card-actions>
             </v-card>
         </v-container>
     </v-container>
 </template>
 
-<style>
-    @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono");
-
-    table th + th { border-left:1px solid #dddddd; }
-    table td + td { border-left:1px solid #dddddd; }
-    tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, .05);
-    }
-    
-    .v-data-table
-    /deep/
-    tbody
-    /deep/
-    tr:hover:not(.v-data-table__expanded__content) {
-        background: #8797a8 !important;
-    }
-
-    .v-select__selections {
-        max-width: 150px;
-        min-width: 100px;
-        border: none;
-    }
-
-    .flex {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-    }
-</style>
-
 <script>
+    import { required } from 'vee-validate/dist/rules'
+    import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+    setInteractionMode('eager')
+
+    extend('required', {
+        ...required,
+        message: '{_field_} is required.'
+    })
     export default {
+        components: {
+            ValidationProvider,
+            ValidationObserver,
+        },
         data() {
             return {
                 load: false,
                 dialog: false,
-                dialogDetail: false,
-                typeInput: 'Add',
-                role: '',
-                keyword: '',
-                video: [],
-                jenisHewan: [],
-                customer: [],
+                languageList : [
+                    { code : 'en-US', name : 'English (United States)' },
+                    { code : 'en-GB', name : 'English (United Kingdom)' },
+                    { code : 'id-ID', name : 'Indonesian' }
+                ],
                 form: {
-                    id_jenis: '',
-                    id_customer: '',
-                    name: '',
-                    tanggal_lahir: '',
-                    created_by: '',
-                    updated_by: '',
-                    delete_by: '',
+                    title: '',
+                    description: '',
+                    video: [],
+                    language: '',
                 },
-                detail: {
-                    name: '',
-                    diubah: '',
-                    diubaholeh: '',
-                    dibuat: '',
-                    dibuatoleh: '',
-                },
-                updatedId: '',
                 errors: '',
-                user: new FormData,
-                menu2: false,
+                video: new FormData,
             }
         },
-        computed: {
-            formTitle() {
-                return this.typeInput
-            },
-        },
         methods: {
-            close() {
-                this.dialog = false
-                this.typeInput = 'Tambah';
-            },
             clear() {
-                this.resetForm();
-            },
-            readDetail(item) {
-                this.dialogDetail = true
-                this.detail.name = item.name
-                this.detail.dibuat = item.created_at
-                this.detail.dibuatoleh = item.created_by
-                this.detail.diubah = item.updated_at
-                this.detail.diubaholeh = item.updated_by
-            },
-            readData() {
-                var uri = this.$apiUrl + '/videos'
-                this.$http.get(uri).then(response => {
-                    this.video = response.data
-                })
-            },
-            setForm() {
-                this.$router.push({
-                    name: 'listVideo'
-                })
-                if (this.typeInput === 'Tambah') {
-                    this.createData()
-                } else {
-                    this.updateData()
+                this.form = {
+                    title : '',
+                    description : '',
+                    video : '',
+                    language : ''
                 }
             },
-            setRole() {
-                this.role = localStorage.getItem('role');
+            async checkForm() {
+                const isValid = await this.$refs.observer.validate();
+                if(isValid){
+                    this.storeData()
+                }
             },
-        },
-        mounted() {
-            this.readData();
-            this.setRole();
+            async storeData() {
+                this.video.append('title', this.form.title);
+                this.video.append('video', "/uploads/videos/"+this.form.video.name);
+                this.video.append('language', this.form.language);
+                this.video.append('description', this.form.description);
+                this.video.append('thumbnail', this.form.video.name.split('.')[0]+".jpg");
+                this.video.append('user_id', localStorage.getItem('user_id'));
+                this.video.append('file', this.form.video);
+
+                var uri = this.$apiUrl + '/videos'
+                // this.$Progress.start()
+                this.$swal({
+                        icon: 'info',
+                        title: 'Processing..',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: function () {
+                            this.$swal.showLoading()
+                        }
+                    })
+                const postReq = await this.$http.post(uri, this.video, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }).then(response => {
+                    console.log(postReq)
+                    this.$swal({
+                        icon: 'success',
+                        title: response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    // this.$Progress.finish()
+                    this.$router.push({
+                        name: 'listVideo'
+                    })
+                }).catch(error => {
+                    this.errors = error
+                    this.$Progress.fail()
+                    this.$swal({
+                        icon: 'error',
+                        title: 'Warning !',
+                        text: this.errors,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    // this.load = false;
+                })
+            },
         },
     }
 </script>

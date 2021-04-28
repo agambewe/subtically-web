@@ -10,186 +10,180 @@
                                 Back
                             </v-btn>
                         </v-flex>
-                        <v-divider class="mx-1" inset vertical></v-divider>
-                        <v-flex xs4 >
-                            <v-text-field v-model="keyword" append-icon="mdi-magnify" label="Cari" single-line hide-details></v-text-field>
-                        </v-flex>
                     </template>
                     
                 </v-dialog>
             </v-layout>
             <v-card>
-                <v-card-title>
-                    <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-row>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-text-field v-model="form.name" label="Name"></v-text-field>
-                            </v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-text-field disabled v-model="form.username" label="Username"></v-text-field>
-                            </v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-text-field v-model="form.email" label="Email"></v-text-field>
-                            </v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-radio-group
-                                v-model="form.role"
-                                row
-                                disabled
-                                >
-                                <v-radio
-                                    label="Admin"
-                                    value=1
-                                ></v-radio>
-                                <v-radio
-                                    label="Dosen"
-                                    value=2
-                                ></v-radio>
-                                <v-radio
-                                    label="Siswa"
-                                    value=3
-                                ></v-radio>
-                                </v-radio-group>
-                            </v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-checkbox
-                                    v-model="checkbox"
-                                    hide-details
-                                ></v-checkbox> Change Password?</v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-text-field v-if="this.checkbox" v-model="form.oldpassword" label="Old Password"></v-text-field>
-                            </v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-text-field v-if="this.checkbox" v-model="form.password" label="New Password"></v-text-field>
-                            </v-col>
-                            <v-col cols="4" sm="6" md="12">
-                                <v-text-field v-if="this.checkbox" v-model="form.repassword" label="Retype New Password"></v-text-field>
-                            </v-col>
-                        </v-row>
+                        <ValidationObserver ref="observer" v-slot="{  }">
+                            <v-form>
+                                <v-row>
+                                    <v-col cols="4" sm="6" md="12">
+                                        <ValidationProvider v-slot="{ errors }" name='Name' rules="required">
+                                            <v-text-field v-model="form.name" label="Name" :error-messages="errors"
+                                            />
+                                        </ValidationProvider>
+                                    </v-col>
+                                    <v-col cols="4" sm="6" md="12">
+                                        <v-text-field disabled v-model="form.username" label="Username"></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4" sm="6" md="12">
+                                        <ValidationProvider v-slot="{ errors }" name="Email" rules="required|email">  
+                                            <v-text-field v-model="form.email" label="Email" :error-messages="errors"></v-text-field>
+                                        </ValidationProvider>
+                                    </v-col>
+                                    <v-col cols="4" sm="6" md="12">
+                                        <v-radio-group
+                                        v-model="form.role"
+                                        row
+                                        disabled
+                                        >
+                                        <v-radio
+                                            label="Admin"
+                                            value=1
+                                        ></v-radio>
+                                        <v-radio
+                                            label="Pengajar"
+                                            value=2
+                                        ></v-radio>
+                                        <v-radio
+                                            label="Siswa"
+                                            value=3
+                                        ></v-radio>
+                                        </v-radio-group>
+                                    </v-col>
+                                    <v-col cols="4" sm="6" md="12">
+                                        <v-checkbox
+                                            v-model="checkbox"
+                                            hide-details
+                                        ></v-checkbox> Change Password?</v-col>
+                                    <v-col v-if="checkbox" cols="4" sm="6" md="12">
+                                            <ValidationProvider v-slot="{ errors }" name="Password" rules="required|min:6">
+                                                <v-text-field v-model="form.oldpassword" type="password" label="Old Password" :error-messages="errors"></v-text-field>
+                                            </ValidationProvider>
+                                            <ValidationProvider v-slot="{ errors }" vid="passwordRef" name="Password" rules="required|min:6">
+                                                <v-text-field v-model="form.password" type="password" label="Password" :error-messages="errors"></v-text-field>
+                                            </ValidationProvider>
+                                            <ValidationProvider v-slot="{ errors }" name="Retype Password" rules="required|confirmed:passwordRef">
+                                                <v-text-field v-model="form.password_confirmation" type="password" label="Retype Password" :error-messages="errors"></v-text-field>
+                                            </ValidationProvider>
+                                        </v-col>
+                                    
+                                </v-row>
+                            </v-form>
+                        </ValidationObserver>
                     </v-container>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red accent-2" text @click="close">Reset</v-btn>
-                    <v-btn color="primary" text @click="setForm()">Submit</v-btn>
+                    <v-btn color="red accent-2" text @click="clear">Reset</v-btn>
+                    <v-btn color="primary" text @click="checkForm()">Submit</v-btn>
                 </v-card-actions>
             </v-card>
         </v-container>
     </v-container>
 </template>
 
-<style>
-    @import url("https://fonts.googleapis.com/css?family=Share+Tech+Mono");
-
-    table th + th { border-left:1px solid #dddddd; }
-    table td + td { border-left:1px solid #dddddd; }
-    tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, .05);
-    }
-    
-    .v-data-table
-    /deep/
-    tbody
-    /deep/
-    tr:hover:not(.v-data-table__expanded__content) {
-        background: #8797a8 !important;
-    }
-
-    .v-select__selections {
-        max-width: 150px;
-        min-width: 100px;
-        border: none;
-    }
-
-    .flex {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-    }
-</style>
-
 <script>
+    import { required, confirmed, email, min} from 'vee-validate/dist/rules'
+    import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+    setInteractionMode('eager')
+
+    extend('required', {
+        ...required,
+        message: '{_field_} is required.'
+    });
+    extend('email', email);
+    extend('confirmed', confirmed);
+    extend('min', {
+        ...min,
+        message: 'Too few {_field_}.'
+    })
     export default {
+        components: {
+            ValidationProvider,
+            ValidationObserver,
+        },
         data() {
             return {
                 checkbox: false,
                 load: false,
                 dialog: false,
-                dialogDetail: false,
-                typeInput: 'Add',
-                role: '',
-                keyword: '',
-                video: [],
-                jenisHewan: [],
-                customer: [],
                 form: {
-                    id_jenis: '',
-                    id_customer: '',
                     name: '',
-                    tanggal_lahir: '',
-                    created_by: '',
-                    updated_by: '',
-                    delete_by: '',
+                    username: '',
+                    email: '',
+                    role: '',
+                    password_old: '',
+                    password: '',
+                    password_confirmation: '',
                 },
-                detail: {
-                    name: '',
-                    diubah: '',
-                    diubaholeh: '',
-                    dibuat: '',
-                    dibuatoleh: '',
-                },
-                updatedId: '',
                 errors: '',
                 user: new FormData,
-                menu2: false,
             }
         },
-        computed: {
-            formTitle() {
-                return this.typeInput
-            },
-        },
         methods: {
-            close() {
-                this.dialog = false
-                this.typeInput = 'Tambah';
-            },
             clear() {
-                this.resetForm();
-            },
-            readDetail(item) {
-                this.dialogDetail = true
-                this.detail.name = item.name
-                this.detail.dibuat = item.created_at
-                this.detail.dibuatoleh = item.created_by
-                this.detail.diubah = item.updated_at
-                this.detail.diubaholeh = item.updated_by
+                this.readData();
             },
             readData() {
-                var uri = this.$apiUrl + '/videos'
+                var uri = this.$apiUrl + '/users/'+this.$route.params.id
                 this.$http.get(uri).then(response => {
-                    this.video = response.data
+                    var item = response.data
+                    this.form.name = item.name
+                    this.form.email = item.email
+                    this.form.username = item.username
+                    this.form.role = item.role
                 })
             },
-            setForm() {
-                if (this.typeInput === 'Tambah') {
-                    this.createData()
-                } else {
+            async checkForm() {
+                const isValid = await this.$refs.observer.validate();
+                if(isValid){
                     this.updateData()
                 }
             },
-            setRole() {
-                this.role = localStorage.getItem('role');
+            updateData() {
+                this.user.append('name', this.form.name);
+                this.user.append('email', this.form.email);
+                if(this.checkbox){
+                    this.user.append('password_old', this.form.password_old);
+                    this.user.append('password', this.form.password);
+                    this.user.append('password_confirmation', this.form.password_confirmation);
+                }
+
+                var uri = this.$apiUrl + '/users/'+this.$route.params.id
+                this.load = true
+                this.$http.post(uri, this.user, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }).then(response => {
+                    this.$swal({
+                        icon: 'success',
+                        title: response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.load = false;
+                    this.$router.push({
+                        name: 'listUser'
+                    })
+                }).catch(error => {
+                    this.$swal({
+                        icon: 'error',
+                        title: 'Warning !',
+                        text: error.response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    this.load = false;
+                })
             },
         },
         mounted() {
             this.readData();
-            this.setRole();
         },
     }
 </script>
